@@ -1,0 +1,8 @@
+echo "venv/
+__pycache__/
+*.pyc
+instance/
+migrations/
+.env" > .gitignore
+git add .gitignore
+git commit -m "chore: add .gitignore file"
