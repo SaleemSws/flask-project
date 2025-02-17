@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Edit Task{% endblock %}
+
+{% block content %}
+    <h2>Edit Task</h2>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <label>Title:</label> {{ form.title() }}<br>
+        <label>Description:</label> {{ form.description() }}<br>
+        <label>Due Date:</label> {{ form.due_date() }}<br>
+        <button type="submit">Update Task</button>
+    </form>
+
+    <a href="{{ url_for('app_routes.dashboard') }}">Back to Dashboard</a>
+{% endblock %}
