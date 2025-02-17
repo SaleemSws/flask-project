@@ -1,9 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}To-Do List{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    {% block content %}{% endblock %}
+    <nav>
+        <a href="{{ url_for('app_routes.home') }}">Home</a>
+        <a href="{{ url_for('app_routes.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('app_routes.history') }}">History</a>
+        <a href="{{ url_for('app_routes.search') }}">Search</a>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

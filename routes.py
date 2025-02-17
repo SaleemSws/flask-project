@@ -1,21 +1,23 @@
-from app import app, db
-from models import Todo
-from flask import render_template, request, redirect, url_for
+from flask import Blueprint, render_template
+
+app_routes = Blueprint("app_routes", __name__)
 
 
-@app.route("/")
-def index():
-    todos = Todo.query.all()
-    return render_template("index.html", todos=todos)
+@app_routes.route("/")
+def home():
+    return render_template("index.html")
 
 
-@app.route("/create", methods=["GET", "POST"])
-def create_todo():
-    if request.method == "POST":
-        todo = Todo(
-            title=request.form["title"], description=request.form["description"]
-        )
-        db.session.add(todo)
-        db.session.commit()
-        return redirect(url_for("index"))
-    return render_template("create.html")
+@app_routes.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
+
+@app_routes.route("/history")
+def history():
+    return render_template("history.html")
+
+
+@app_routes.route("/search")
+def search():
+    return render_template("search.html")

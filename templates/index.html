@@ -1,11 +1,7 @@
-<!-- templates/index.html -->
 {% extends "base.html" %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>Todos</h1>
-<ul>
-    {% for todo in todos %}
-    <li>{{ todo.title }}</li>
-    {% endfor %}
-</ul>
+    <h1>Welcome to the To-Do List</h1>
+    <a href="{{ url_for('app_routes.dashboard') }}">Go to Dashboard</a>
 {% endblock %}
