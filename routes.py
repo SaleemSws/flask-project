@@ -39,6 +39,22 @@ def delete_task(task_id):
     return redirect(url_for("app_routes.dashboard"))
 
 
+@app_routes.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
+def edit_task(task_id):
+    task = Task.query.get(task_id)
+    form = TaskForm(obj=task)
+
+    if form.validate_on_submit():
+        task.title = form.title.data
+        task.description = form.description.data
+        task.due_date = form.due_date.data
+        db.session.commit()
+        flash("Task updated!", "info")
+        return redirect(url_for("app_routes.dashboard"))
+
+    return render_template("edit_task.html", form=form, task=task)
+
+
 @app_routes.route("/history")
 def history():
     return render_template("history.html")

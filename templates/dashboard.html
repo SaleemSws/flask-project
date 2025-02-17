@@ -17,9 +17,11 @@
     {% for task in tasks %}
         <li>
             {{ task.title }} - Due: {{ task.due_date }}
+            <a href="{{ url_for('app_routes.edit_task', task_id=task.id) }}">✏️ Edit</a>
             <a href="{{ url_for('app_routes.delete_task', task_id=task.id) }}" onclick="return confirm('Are you sure?');">❌ Delete</a>
         </li>
     {% endfor %}
     </ul>
+
 
 {% endblock %}
