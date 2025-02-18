@@ -57,7 +57,10 @@ def edit_task(task_id):
 
 @app_routes.route("/history")
 def history():
-    return render_template("history.html")
+    completed_tasks = (
+        Task.query.filter_by(completed=True).order_by(Task.completed_at.desc()).all()
+    )
+    return render_template("history.html", tasks=completed_tasks)
 
 
 @app_routes.route("/search", methods=["GET", "POST"])
