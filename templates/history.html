@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+
+{% block content %}
+    <h2>Completed Tasks</h2>
+    
+    {% if tasks %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Completed At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.completed_at.strftime('%Y-%m-%d %H:%M') if task.completed_at else 'N/A' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No completed tasks yet.</p>
+    {% endif %}
+{% endblock %}
