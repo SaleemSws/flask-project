@@ -74,3 +74,12 @@ def search_tasks():
         ).all()  # ค้นหาแบบ case-insensitive
 
     return render_template("search.html", tasks=tasks, query=query)
+
+
+@app_routes.route("/complete/<int:task_id>", methods=["POST"])
+def complete_task(task_id):
+    task = Task.query.get_or_404(task_id)
+    task.completed = True
+    task.completed_at = datetime.utcnow()
+    db.session.commit()
+    return redirect(url_for("app_routes.dashboard"))
