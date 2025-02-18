@@ -60,6 +60,14 @@ def history():
     return render_template("history.html")
 
 
-@app_routes.route("/search")
-def search():
-    return render_template("search.html")
+@app_routes.route("/search", methods=["GET", "POST"])
+def search_tasks():
+    query = request.args.get("query", "").strip()  # ดึงค่าจาก input
+    tasks = []
+
+    if query:  # ถ้ามีการค้นหา
+        tasks = Task.query.filter(
+            Task.title.ilike(f"%{query}%")
+        ).all()  # ค้นหาแบบ case-insensitive
+
+    return render_template("search.html", tasks=tasks, query=query)
