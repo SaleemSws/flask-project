@@ -18,3 +18,8 @@ class Task(db.Model):
     completed = db.Column(db.Boolean, default=False)
     due_date = db.Column(db.DateTime, nullable=True)  # วันที่กำหนดส่ง
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # วันที่สร้าง
+    completed_at = db.Column(db.DateTime, nullable=True)  # วันที่งานเสร็จ
+
+    def mark_complete(self):
+        self.completed = True
+        self.completed_at = datetime.utcnow()
