@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Search Tasks{% endblock %}
+
+{% block content %}
+    <h2>Search Tasks</h2>
+    <form method="GET">
+        <input type="text" name="query" value="{{ query }}" placeholder="Search for tasks...">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if tasks %}
+        <h3>Search Results</h3>
+        <ul>
+            {% for task in tasks %}
+                <li>{{ task.title }} - Due: {{ task.due_date }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tasks found.</p>
+    {% endif %}
+{% endblock %}
