@@ -22,6 +22,17 @@
         </li>
     {% endfor %}
     </ul>
+    {% for task in tasks if not task.completed %}
+    <tr>
+        <td>{{ task.title }}</td>
+        <td>{{ task.due_date }}</td>
+        <td>
+            <form action="{{ url_for('app_routes.complete_task', task_id=task.id) }}" method="POST">
+                <button type="submit" class="btn btn-success btn-sm">✔ Mark as Complete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
 
 
 {% endblock %}
