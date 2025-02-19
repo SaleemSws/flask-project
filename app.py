@@ -3,11 +3,12 @@ from config import Config
 from models import db
 from routes import app_routes
 from flask_migrate import Migrate
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-
+Bootstrap(app)
 db.init_app(app)
 app.register_blueprint(app_routes)
 migrate = Migrate(app, db)  # เพิ่ม Migrate ให้กับ app
