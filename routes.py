@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models import db, Task, User
 from forms import TaskForm
 from datetime import datetime
+from flask_login import login_required, logout_user, login_user
 
 app_routes = Blueprint("app_routes", __name__)
 
@@ -12,6 +13,7 @@ def index():
 
 
 @app_routes.route("/dashboard", methods=["GET", "POST"])
+@login_required
 def dashboard():
     form = TaskForm()
     if form.validate_on_submit():
@@ -25,7 +27,7 @@ def dashboard():
         flash("Task added successfully!", "success")
         return redirect(url_for("app_routes.dashboard"))
 
-    tasks = Task.query.all()  # ดึงงานทั้งหมดจากฐานข้อมูล
+    tasks = Task.query.filter_by(completed=False)  # ดึงงานทั้งหมดจากฐานข้อมูล
     return render_template("dashboard.html", form=form, tasks=tasks)
 
 
@@ -96,10 +98,33 @@ def register():
             return redirect(url_for("app_routes.register"))
 
         new_user = User(username=username)
-        new_user.set_password(password)
+        new_user.set_password(password)  # ใช้ set_password() เพื่อแฮชรหัสผ่านก่อนบันทึก
         db.session.add(new_user)
         db.session.commit()
         flash("Account created! Please log in.", "success")
         return redirect(url_for("app_routes.login"))
 
     return render_template("register.html")
+
+
+@app_routes.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.check_password(password):
+            login_user(user)
+            return redirect(url_for("app_routes.dashboard"))
+
+        flash("Invalid username or password", "danger")
+
+    return render_template("login.html")
+
+
+@app_routes.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("app_routes.login"))

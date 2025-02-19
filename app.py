@@ -1,6 +1,6 @@
 from flask import Flask
 from config import Config
-from models import db
+from models import db, User
 from routes import app_routes
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
