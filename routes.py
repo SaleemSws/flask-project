@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models import db, Task
+from models import db, Task, User
 from forms import TaskForm
 from datetime import datetime
 
@@ -83,3 +83,23 @@ def complete_task(task_id):
     task.completed_at = datetime.utcnow()
     db.session.commit()
     return redirect(url_for("app_routes.dashboard"))
+
+
+@app_routes.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if User.query.filter_by(username=username).first():
+            flash("Username already exists!", "danger")
+            return redirect(url_for("app_routes.register"))
+
+        new_user = User(username=username)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Account created! Please log in.", "success")
+        return redirect(url_for("app_routes.login"))
+
+    return render_template("register.html")
