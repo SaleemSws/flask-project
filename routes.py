@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models import db, Task, User
 from forms import TaskForm
 from datetime import datetime
-from flask_login import login_required, logout_user, login_user, current_user
+from flask_login import login_required, logout_user, login_user
 
 app_routes = Blueprint("app_routes", __name__)
 
@@ -12,23 +12,29 @@ def index():
     return render_template("index.html")
 
 
-@app_routes.route("/dashboard", methods=["GET", "POST"])
+@app_routes.route("/dashboard")
 @login_required
 def dashboard():
+    tasks = Task.query.filter_by(completed=False).all()
+    return render_template("dashboard.html", tasks=tasks)
+
+
+@app_routes.route("/add_task", methods=["GET", "POST"])
+@login_required
+def add_task():
     form = TaskForm()
     if form.validate_on_submit():
         new_task = Task(
             title=form.title.data,
             description=form.description.data,
             due_date=form.due_date.data,
+            created_at=datetime.utcnow(),
         )
         db.session.add(new_task)
         db.session.commit()
         flash("Task added successfully!", "success")
         return redirect(url_for("app_routes.dashboard"))
-
-    tasks = Task.query.filter_by(completed=False)  # ดึงงานทั้งหมดจากฐานข้อมูล
-    return render_template("dashboard.html", form=form, tasks=tasks)
+    return render_template("add_task.html", form=form)
 
 
 @app_routes.route("/delete_task/<int:task_id>")
@@ -128,18 +134,3 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("app_routes.login"))
-
-
-@app_routes.route("/add_task", methods=["POST"])
-@login_required
-def add_task():
-    form = TaskForm()
-    if form.validate_on_submit():
-        new_task = Task(title=form.title.data, completed=False, user_id=current_user.id)
-        db.session.add(new_task)
-        db.session.commit()
-        flash("Task added successfully!", "success")
-    return redirect(url_for("app_routes.dashboard"))
-
-
-# สร้างเส้นทางสำหรับการเพิ่มงานใหม่
