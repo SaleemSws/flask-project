@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models import db, Task, User
-from forms import TaskForm
+from forms import TaskForm, LoginForm  # เพิ่ม LoginForm
 from datetime import datetime
 from flask_login import login_required, logout_user, login_user
 
@@ -115,18 +115,15 @@ def register():
 
 @app_routes.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        user = User.query.filter_by(username=username).first()
-
-        if user and user.check_password(password):
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(form.password.data):
             login_user(user)
+            flash("Login successful!", "success")
             return redirect(url_for("app_routes.dashboard"))
-
         flash("Invalid username or password", "danger")
-
-    return render_template("login.html")
+    return render_template("login.html", form=form)
 
 
 @app_routes.route("/logout")
