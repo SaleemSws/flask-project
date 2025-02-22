@@ -6,13 +6,15 @@ from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 
+# กำหนด static folder ให้ชัดเจน
 app = Flask(__name__)
+
 app.config.from_object(Config)
 
 Bootstrap(app)
 db.init_app(app)
 app.register_blueprint(app_routes)
-migrate = Migrate(app, db)  # เพิ่ม Migrate ให้กับ app
+migrate = Migrate(app, db)  # เพิ่ม Migrate ให้กับ appss
 
 login_manager = LoginManager()
 login_manager.init_app(app)

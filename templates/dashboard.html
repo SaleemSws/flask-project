@@ -1,27 +1,190 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}AI Task Interface{% endblock %}
+
+{% block head %}
+{{ () }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
 
 {% block content %}
-    <h2>Dashboard</h2>
+<div class="cyber-interface">
+    <div class="scanner-line"></div>
+    <div class="grid-overlay"></div>
     
-    <a href="{{ url_for('app_routes.add_task') }}" class="btn btn-primary mb-3">
-        <i class="fas fa-plus"></i> Add New Task
-    </a>
-
-    <h3>Tasks</h3>
-    <ul class="list-group">
-    {% for task in tasks %}
-        <li class="list-group-item">
-            <h5>{{ task.title }}</h5>
-            <p>Due: {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}</p>
-            <div class="btn-group">
-                <a href="{{ url_for('app_routes.edit_task', task_id=task.id) }}" class="btn btn-sm btn-info">✏️ Edit</a>
-                <a href="{{ url_for('app_routes.delete_task', task_id=task.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">❌ Delete</a>
-                <form action="{{ url_for('app_routes.complete_task', task_id=task.id) }}" method="POST" style="display: inline;">
-                    <button type="submit" class="btn btn-sm btn-success">✔ Complete</button>
-                </form>
+    <div class="neo-container p-4">
+        <!-- AI Interface Header -->
+        <div class="ai-header mb-4">
+            <div class="ai-status-ring">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
             </div>
-        </li>
-    {% endfor %}
-    </ul>
+            <div class="header-content">
+                <h1 class="cyber-title">
+                    <i class='bx bx-chip me-2'></i>AI Task Control Center
+                    <div class="glitch-effect"></div>
+                </h1>
+                <div class="system-info">
+                    <span class="status-indicator">SYSTEM ACTIVE</span>
+                    <span class="divider">|</span>
+                    <span class="cyber-time"></span>
+                    <span class="divider">|</span>
+                    <span class="cyber-date"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neural Stats Grid -->
+        <div class="neural-grid mb-4">
+            <div class="matrix-card">
+                <div class="holo-effect"></div>
+                <div class="card-inner">
+                    <div class="neural-icon">
+                        <i class='bx bx-brain'></i>
+                    </div>
+                    <div class="neural-data">
+                        <div class="data-value">{{ tasks|length }}</div>
+                        <div class="data-label">Active Processes</div>
+                    </div>
+                    <div class="neural-graph"></div>
+                </div>
+            </div>
+            
+            <div class="matrix-card">
+                <div class="holo-effect"></div>
+                <div class="card-inner">
+                    <div class="neural-icon">
+                        <i class='bx bx-check-shield'></i>
+                    </div>
+                    <div class="neural-data">
+                        <div class="data-value">{{ completed_count if completed_count else 0 }}</div>
+                        <div class="data-label">Completed Tasks</div>
+                    </div>
+                    <div class="neural-graph"></div>
+                </div>
+            </div>
+            
+            <div class="matrix-card">
+                <div class="holo-effect"></div>
+                <div class="card-inner">
+                    <div class="neural-icon">
+                        <i class='bx bx-alarm-exclamation'></i>
+                    </div>
+                    <div class="neural-data">
+                        <div class="data-value">{{ priority_count if priority_count else 0 }}</div>
+                        <div class="data-label">Priority Signals</div>
+                    </div>
+                    <div class="neural-graph"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Command Center -->
+        <div class="command-center mb-4">
+            <a href="{{ url_for('app_routes.add_task') }}" class="cyber-btn pulse-btn">
+                <i class='bx bx-plus-circle'></i>
+                <span class="button-text">INITIALIZE NEW TASK</span>
+                <div class="button-glow"></div>
+            </a>
+        </div>
+
+        <!-- Task Matrix -->
+        <div class="task-matrix">
+            {% for task in tasks %}
+            <div class="matrix-task" data-priority="{{ task.priority }}">
+                <div class="task-hologram"></div>
+                <div class="priority-indicator"></div>
+                <div class="task-content">
+                    <div class="task-header">
+                        <span class="task-id">#{{ task.id }}</span>
+                        <span class="task-status">ACTIVE</span>
+                    </div>
+                    <h3 class="task-title">{{ task.title }}</h3>
+                    <div class="task-meta">
+                        <i class='bx bx-time-five'></i>
+                        <span class="countdown" data-due="{{ task.due_date.strftime('%Y-%m-%d %H:%M') }}">
+                            {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}
+                        </span>
+                    </div>
+                    <div class="task-actions">
+                        <a href="{{ url_for('app_routes.edit_task', task_id=task.id) }}" 
+                           class="cyber-action edit">
+                           <i class='bx bx-edit'></i>
+                           <span>MODIFY</span>
+                        </a>
+                        <form action="{{ url_for('app_routes.complete_task', task_id=task.id) }}" 
+                              method="POST" class="d-inline">
+                            <button type="submit" class="cyber-action complete">
+                                <i class='bx bx-check'></i>
+                                <span>EXECUTE</span>
+                            </button>
+                        </form>
+                        <a href="{{ url_for('app_routes.delete_task', task_id=task.id) }}" 
+                           class="cyber-action delete"
+                           onclick="return confirm('CONFIRM TASK TERMINATION?');">
+                           <i class='bx bx-trash'></i>
+                           <span>TERMINATE</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- New Card -->
+        <div class="card bg-cyber border-cyber p-4 rounded-3 matrix-overlay">
+            <div class="d-flex align-items-center gap-3">
+                <i class="bx bx-brain display-4 neural-icon"></i>
+                <div>
+                    <h3 class="text-cyber mb-0">Title</h3>
+                    <p class="text-light mb-0">Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Move scripts here, inside content block -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function updateInterface() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-US', { 
+        hour12: false, 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+    });
+    const date = now.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).replace(/\//g, '.');
+    
+    document.querySelector('.cyber-time').textContent = time;
+    document.querySelector('.cyber-date').textContent = date;
+}
+
+setInterval(updateInterface, 1000);
+updateInterface();
+
+// Neural graph animation
+document.querySelectorAll('.neural-graph').forEach(graph => {
+    const points = 20;
+    const values = Array.from({length: points}, () => Math.random());
+    
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', `0 0 ${points-1} 1`);
+    
+    const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    const points_str = values.map((v, i) => `${i},${v}`).join(' ');
+    polyline.setAttribute('points', points_str);
+    
+    svg.appendChild(polyline);
+    graph.appendChild(svg);
+});
+</script>
 {% endblock %}
