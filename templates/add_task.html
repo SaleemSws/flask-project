@@ -1,67 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Task</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            width: 300px;
-            text-align: center;
-        }
-        input[type="text"], select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            background: #333;
-            color: #fff;
-        }
-        button {
-            background: #00bcd4;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #0097a7;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Add Task</h1>
-        <form action="/add" method="post">
-            <input type="text" name="title" placeholder="Enter task..." required>
-            <select name="priority" required>
-                <option value="0">0 stars</option>
-                <option value="1">⭐</option>
-                <option value="2">⭐⭐</option>
-                <option value="3">⭐⭐⭐</option>
-                <option value="4">⭐⭐⭐⭐</option>
-                <option value="5">⭐⭐⭐⭐⭐</option>
-            </select>
-            <button type="submit">Add Task</button>
+{% extends "base.html" %}
+{% block title %}Add Task{% endblock %}
+
+{% block content %}
+<div class="cyber-container">
+    <div class="glass-panel">
+        <h2 class="cyber-title">New Task Protocol <span class="glow"></span></h2>
+        <form method="POST" class="cyber-form">
+            {{ form.hidden_tag() }}
+            <div class="input-group">
+                <div class="cyber-input">
+                    {{ form.title(class="future-input", placeholder="Mission Objective") }}
+                    <div class="input-line"></div>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="cyber-input">
+                    {{ form.description(class="future-input", placeholder="Mission Details") }}
+                    <div class="input-line"></div>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="cyber-input">
+                    <input type="datetime-local" 
+                           name="due_date" 
+                           class="future-input" 
+                           required 
+                           value="{{ form.due_date.data.strftime('%Y-%m-%dT%H:%M') if form.due_date.data else '' }}">
+                    <div class="input-line"></div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="cyber-button">
+                    <span>Initialize Task</span>
+                    <div class="button-border"></div>
+                </button>
+                <a href="{{ url_for('app_routes.dashboard') }}" class="cyber-button cancel">
+                    <span>Abort</span>
+                </a>
+            </div>
         </form>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+    .cyber-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    }
+
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        animation: panelGlow 2s infinite alternate;
+        min-width: 400px;
+    }
+
+    .cyber-title {
+        color: #00ff9d;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .future-input {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        color: #fff;
+        padding: 12px;
+        width: 100%;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .future-input:focus {
+        border-color: #00ff9d;
+        box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+        outline: none;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .cyber-button {
+        background: transparent;
+        color: #00ff9d;
+        border: 2px solid #00ff9d;
+        padding: 12px 30px;
+        border-radius: 5px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .cyber-button:hover {
+        background: #00ff9d;
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+    }
+
+    .cyber-button.cancel {
+        color: #ff3e3e;
+        border-color: #ff3e3e;
+    }
+
+    .cyber-button.cancel:hover {
+        background: #ff3e3e;
+        color: #000;
+        box-shadow: 0 0 20px rgba(255, 62, 62, 0.5);
+    }
+
+    @keyframes panelGlow {
+        from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
+        to { box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); }
+    }
+</style>
+{% endblock %}

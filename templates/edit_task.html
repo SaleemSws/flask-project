@@ -2,68 +2,114 @@
 {% block title %}Edit Task{% endblock %}
 
 {% block content %}
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            width: 300px;
-            text-align: center;
-        }
-        input[type="text"], select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            background: #333;
-            color: #fff;
-        }
-        button {
-            background: #00bcd4;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #0097a7;
-        }
-    </style>
-
-    <div class="container">
-        <h2>Edit Task</h2>
-
-        <form method="POST">
+<div class="cyber-container">
+    <div class="glass-panel">
+        <h2 class="cyber-title">Edit Task <span class="glow"></span></h2>
+        <form method="POST" class="cyber-form">
             {{ form.hidden_tag() }}
-            <label>Title:</label> {{ form.title() }}<br>
-            <label>Description:</label> {{ form.description() }}<br>
-            <label>Due Date:</label> {{ form.due_date() }}<br>
-            <label>Priority:</label>
-            <select name="priority" required>
-                <option value="0" {% if task.priority == 0 %}selected{% endif %}>0 stars</option>
-                <option value="1" {% if task.priority == 1 %}selected{% endif %}>⭐</option>
-                <option value="2" {% if task.priority == 2 %}selected{% endif %}>⭐⭐</option>
-                <option value="3" {% if task.priority == 3 %}selected{% endif %}>⭐⭐⭐</option>
-                <option value="4" {% if task.priority == 4 %}selected{% endif %}>⭐⭐⭐⭐</option>
-                <option value="5" {% if task.priority == 5 %}selected{% endif %}>⭐⭐⭐⭐⭐</option>
-            </select>
-            <button type="submit">Update Task</button>
+            <div class="input-group">
+                <div class="cyber-input">
+                    {{ form.title(class="future-input", placeholder="Enter title") }}
+                    <div class="input-line"></div>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="cyber-input">
+                    {{ form.description(class="future-input", placeholder="Enter description") }}
+                    <div class="input-line"></div>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="cyber-input">
+                    {{ form.due_date(class="future-input") }}
+                    <div class="input-line"></div>
+                </div>
+            </div>
+            <button type="submit" class="cyber-button">
+                <span>Update Task</span>
+                <div class="button-border"></div>
+            </button>
         </form>
+        <a href="{{ url_for('app_routes.dashboard') }}" class="back-link">Return to Command Center</a>
     </div>
+</div>
 
-    <a href="{{ url_for('app_routes.dashboard') }}">Back to Dashboard</a>
+<style>
+    .cyber-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    }
+
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        animation: panelGlow 2s infinite alternate;
+    }
+
+    .cyber-title {
+        color: #00ff9d;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .future-input {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        color: #fff;
+        padding: 12px;
+        width: 100%;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .future-input:focus {
+        border-color: #00ff9d;
+        box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+        outline: none;
+    }
+
+    .cyber-button {
+        background: transparent;
+        color: #00ff9d;
+        border: 2px solid #00ff9d;
+        padding: 12px 30px;
+        border-radius: 5px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .cyber-button:hover {
+        background: #00ff9d;
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+    }
+
+    .back-link {
+        color: #00ccff;
+        text-decoration: none;
+        margin-top: 20px;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+        text-shadow: 0 0 10px #00ccff;
+    }
+
+    @keyframes panelGlow {
+        from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
+        to { box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); }
+    }
+</style>
 {% endblock %}
