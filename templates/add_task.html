@@ -1,42 +1,51 @@
 {% extends "base.html" %}
-{% block title %}Add Task{% endblock %}
+{% block title %}Add New Task{% endblock %}
 
 {% block content %}
 <div class="cyber-container">
     <div class="glass-panel">
-        <h2 class="cyber-title">New Task Protocol <span class="glow"></span></h2>
+        <h2 class="cyber-title">Add New Task <span class="glow"></span></h2>
         <form method="POST" class="cyber-form">
             {{ form.hidden_tag() }}
             <div class="input-group">
                 <div class="cyber-input">
-                    {{ form.title(class="future-input", placeholder="Mission Objective") }}
+                    <label class="input-label">Task Title <span class="required">*</span></label>
+                    {{ form.title(class="future-input", placeholder="Enter task title (required)") }}
+                    <small class="help-text">Give your task a clear and concise title</small>
                     <div class="input-line"></div>
                 </div>
             </div>
+            
             <div class="input-group">
                 <div class="cyber-input">
-                    {{ form.description(class="future-input", placeholder="Mission Details") }}
+                    <label class="input-label">Description</label>
+                    {{ form.description(class="future-input", placeholder="Enter task details") }}
+                    <small class="help-text">Add any additional details about your task</small>
                     <div class="input-line"></div>
                 </div>
             </div>
+
             <div class="input-group">
                 <div class="cyber-input">
-                    <input type="datetime-local" 
-                           name="due_date" 
-                           class="future-input" 
-                           required 
-                           value="{{ form.due_date.data.strftime('%Y-%m-%dT%H:%M') if form.due_date.data else '' }}">
+                    <label class="input-label">Priority Level <span class="required">*</span></label>
+                    {{ form.priority(class="future-input") }}
+                    <small class="help-text">⭐ = Low Priority, ⭐⭐⭐⭐⭐ = Highest Priority</small>
                     <div class="input-line"></div>
                 </div>
             </div>
+
+            <div class="input-group">
+                <div class="cyber-input">
+                    <label class="input-label">Due Date <span class="required">*</span></label>
+                    {{ form.due_date(class="future-input", type="datetime-local") }}
+                    <small class="help-text">When does this task need to be completed?</small>
+                    <div class="input-line"></div>
+                </div>
+            </div>
+
             <div class="button-group">
-                <button type="submit" class="cyber-button">
-                    <span>Initialize Task</span>
-                    <div class="button-border"></div>
-                </button>
-                <a href="{{ url_for('app_routes.dashboard') }}" class="cyber-button cancel">
-                    <span>Abort</span>
-                </a>
+                <button type="submit" class="cyber-button">Create Task</button>
+                <a href="{{ url_for('app_routes.index') }}" class="cyber-button-small">Cancel</a>
             </div>
         </form>
     </div>
@@ -126,6 +135,49 @@
     @keyframes panelGlow {
         from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
         to { box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); }
+    }
+
+    .input-label {
+        color: #00ff9d;
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+        letter-spacing: 1px;
+    }
+
+    .required {
+        color: #ff4757;
+        margin-left: 3px;
+    }
+
+    .help-text {
+        color: #7a7a7a;
+        font-size: 0.8em;
+        margin-top: 5px;
+        display: block;
+        font-style: italic;
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .cyber-button-small {
+        background: transparent;
+        color: #00ccff;
+        border: 1px solid #00ccff;
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-left: 10px;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+    }
+
+    .cyber-button-small:hover {
+        background: #00ccff;
+        color: #000;
+        box-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
     }
 </style>
 {% endblock %}

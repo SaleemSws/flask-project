@@ -26,6 +26,7 @@ class Task(db.Model):
     due_date = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime, nullable=True)
+    priority = db.Column(db.Integer, default=0)
 
     def mark_complete(self):
         self.completed = True

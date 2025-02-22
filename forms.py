@@ -5,6 +5,7 @@ from wtforms import (
     DateTimeField,
     TextAreaField,
     SubmitField,
+    SelectField,
 )
 from wtforms.validators import DataRequired, Length
 
@@ -28,5 +29,10 @@ class TaskForm(FlaskForm):
     description = TextAreaField("Description")
     due_date = DateTimeField(
         "Due Date", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
+    )
+    priority = SelectField(
+        "Priority",
+        choices=[(str(i), "⭐" * i) for i in range(6)],
+        validators=[DataRequired()],
     )
     submit = SubmitField("Submit")

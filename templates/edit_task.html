@@ -21,16 +21,22 @@
             </div>
             <div class="input-group">
                 <div class="cyber-input">
-                    {{ form.due_date(class="future-input") }}
+                    {{ form.priority(class="future-input") }}
+                    <div class="input-line"></div>
+                    <small class="help-text">Select priority (0-5 stars)</small>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="cyber-input">
+                    {{ form.due_date(class="future-input", type="datetime-local") }}
                     <div class="input-line"></div>
                 </div>
             </div>
-            <button type="submit" class="cyber-button">
-                <span>Update Task</span>
-                <div class="button-border"></div>
-            </button>
+            <div class="button-group">
+                <button type="submit" class="cyber-button">Update Task</button>
+                <a href="{{ url_for('app_routes.index') }}" class="cyber-button-small">Cancel</a>
+            </div>
         </form>
-        <a href="{{ url_for('app_routes.dashboard') }}" class="back-link">Return to Command Center</a>
     </div>
 </div>
 
