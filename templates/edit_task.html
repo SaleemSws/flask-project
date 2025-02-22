@@ -2,15 +2,68 @@
 {% block title %}Edit Task{% endblock %}
 
 {% block content %}
-    <h2>Edit Task</h2>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: #333;
+            color: #fff;
+        }
+        button {
+            background: #00bcd4;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0097a7;
+        }
+    </style>
 
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <label>Title:</label> {{ form.title() }}<br>
-        <label>Description:</label> {{ form.description() }}<br>
-        <label>Due Date:</label> {{ form.due_date() }}<br>
-        <button type="submit">Update Task</button>
-    </form>
+    <div class="container">
+        <h2>Edit Task</h2>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <label>Title:</label> {{ form.title() }}<br>
+            <label>Description:</label> {{ form.description() }}<br>
+            <label>Due Date:</label> {{ form.due_date() }}<br>
+            <label>Priority:</label>
+            <select name="priority" required>
+                <option value="0" {% if task.priority == 0 %}selected{% endif %}>0 stars</option>
+                <option value="1" {% if task.priority == 1 %}selected{% endif %}>⭐</option>
+                <option value="2" {% if task.priority == 2 %}selected{% endif %}>⭐⭐</option>
+                <option value="3" {% if task.priority == 3 %}selected{% endif %}>⭐⭐⭐</option>
+                <option value="4" {% if task.priority == 4 %}selected{% endif %}>⭐⭐⭐⭐</option>
+                <option value="5" {% if task.priority == 5 %}selected{% endif %}>⭐⭐⭐⭐⭐</option>
+            </select>
+            <button type="submit">Update Task</button>
+        </form>
+    </div>
 
     <a href="{{ url_for('app_routes.dashboard') }}">Back to Dashboard</a>
 {% endblock %}

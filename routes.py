@@ -15,7 +15,7 @@ def index():
 @app_routes.route("/dashboard")
 @login_required
 def dashboard():
-    tasks = Task.query.filter_by(completed=False).all()
+    tasks = Task.query.filter_by(completed=False).order_by(Task.due_date.asc()).all()
     return render_template("dashboard.html", tasks=tasks)
 
 
