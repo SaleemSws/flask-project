@@ -1,31 +1,67 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}System Access{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Login</h2>
-    <form method="POST" class="needs-validation" novalidate>
-        {{ form.csrf_token }}
-        <div class="form-group mb-3">
-            {{ form.username.label(class="form-label") }}
-            {{ form.username(class="form-control") }}
-            {% if form.username.errors %}
-                {% for error in form.username.errors %}
-                    <div class="invalid-feedback d-block">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
+<div class="neo-container p-4">
+    <div class="ai-header mb-4">
+        <div class="ai-status-ring">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
         </div>
-        <div class="form-group mb-3">
-            {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control") }}
-            {% if form.password.errors %}
-                {% for error in form.password.errors %}
-                    <div class="invalid-feedback d-block">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
+        <div class="header-content">
+            <h1 class="cyber-title">
+                <i class='bx bx-lock-alt me-2'></i>System Access Protocol
+            </h1>
+            <div class="system-info">
+                <span class="status-indicator">AWAITING CREDENTIALS</span>
+                <span class="divider">|</span>
+                <span class="cyber-time"></span>
+            </div>
         </div>
-        {{ form.submit(class="btn btn-primary") }}
-    </form>
-    <p class="mt-3">Don't have an account? <a href="{{ url_for('app_routes.register') }}">Register</a></p>
+    </div>
+
+    <div class="matrix-card p-4">
+        <form method="POST" class="cyber-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group mb-4">
+                <label class="text-cyber mb-2">
+                    <i class='bx bx-user'></i> Access ID
+                </label>
+                {{ form.username(class="form-control bg-cyber border-cyber text-light", placeholder="Enter your access ID") }}
+            </div>
+            <div class="form-group mb-4">
+                <label class="text-cyber mb-2">
+                    <i class='bx bx-key'></i> Security Key
+                </label>
+                {{ form.password(class="form-control bg-cyber border-cyber text-light", placeholder="Enter your security key") }}
+            </div>
+            <button type="submit" class="cyber-btn pulse-btn w-100">
+                <i class='bx bx-log-in'></i>
+                <span>Initialize Access</span>
+            </button>
+        </form>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('app_routes.register') }}" class="cyber-action">
+                <i class='bx bx-user-plus'></i>
+                <span>Request New Access</span>
+            </a>
+        </div>
+    </div>
 </div>
+
+<script>
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', { 
+            hour12: false, 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        });
+        document.querySelector('.cyber-time').textContent = timeString;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+</script>
 {% endblock %}

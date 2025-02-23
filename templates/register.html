@@ -1,12 +1,56 @@
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}New Access Request{% endblock %}
 
 {% block content %}
-    <h2>Register</h2>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="{{ url_for('app_routes.login') }}">Log in</a></p>
+<div class="neo-container p-4">
+    <div class="ai-header mb-4">
+        <div class="ai-status-ring">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+        </div>
+        <div class="header-content">
+            <h1 class="cyber-title">
+                <i class='bx bx-user-plus me-2'></i>Access Registration Protocol
+            </h1>
+            <div class="system-info">
+                <span class="status-indicator">NEW USER INITIALIZATION</span>
+                <span class="divider">|</span>
+                <span class="cyber-time"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="matrix-card p-4">
+        <form method="POST" class="cyber-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group mb-4">
+                <label class="text-cyber mb-2">
+                    <i class='bx bx-user'></i> Define Access ID
+                </label>
+                {{ form.username(class="form-control bg-cyber border-cyber text-light", placeholder="Create your access ID") }}
+            </div>
+            <div class="form-group mb-4">
+                <label class="text-cyber mb-2">
+                    <i class='bx bx-lock-alt'></i> Generate Security Key
+                </label>
+                {{ form.password(class="form-control bg-cyber border-cyber text-light", placeholder="Create your security key") }}
+            </div>
+            <button type="submit" class="cyber-btn pulse-btn w-100">
+                <i class='bx bx-user-check'></i>
+                <span>Initialize Registration</span>
+            </button>
+        </form>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('app_routes.login') }}" class="cyber-action">
+                <i class='bx bx-log-in'></i>
+                <span>Return to Access Portal</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ...copy time update script from login.html...
+</script>
 {% endblock %}
