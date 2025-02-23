@@ -26,7 +26,7 @@ class Task(db.Model):
     due_date = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime, nullable=True)
-    priority = db.Column(db.Integer, default=0)
+    priority = db.Column(db.Integer, default=1)  # ตั้งค่าเริ่มต้นเป็น 1
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     user = db.relationship("User", backref=db.backref("tasks", lazy=True))
 
