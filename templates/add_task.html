@@ -1,183 +1,106 @@
 {% extends "base.html" %}
-{% block title %}Add New Task{% endblock %}
+{% block title %}Initialize New Task{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
 
 {% block content %}
-<div class="cyber-container">
-    <div class="glass-panel">
-        <h2 class="cyber-title">Add New Task <span class="glow"></span></h2>
-        <form method="POST" class="cyber-form">
-            {{ form.hidden_tag() }}
-            <div class="input-group">
-                <div class="cyber-input">
-                    <label class="input-label">Task Title <span class="required">*</span></label>
-                    {{ form.title(class="future-input", placeholder="Enter task title (required)") }}
-                    <small class="help-text">Give your task a clear and concise title</small>
-                    <div class="input-line"></div>
+<div class="cyber-interface">
+    <div class="scanner-line"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="neo-container p-4">
+        <!-- Header -->
+        <div class="ai-header mb-4">
+            <div class="ai-status-ring">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+            </div>
+            <div class="header-content">
+                <h1 class="cyber-title">
+                    <i class='bx bx-plus-circle me-2'></i>Task Initialization Protocol
+                    <div class="glitch-effect"></div>
+                </h1>
+                <div class="system-info">
+                    <span class="status-indicator">READY FOR INPUT</span>
+                    <span class="divider">|</span>
+                    <span class="cyber-time"></span>
                 </div>
             </div>
-            
-            <div class="input-group">
-                <div class="cyber-input">
-                    <label class="input-label">Description</label>
-                    {{ form.description(class="future-input", placeholder="Enter task details") }}
-                    <small class="help-text">Add any additional details about your task</small>
-                    <div class="input-line"></div>
-                </div>
-            </div>
+        </div>
 
-            <div class="input-group">
-                <div class="cyber-input">
-                    <label class="input-label">Priority Level <span class="required">*</span></label>
-                    {{ form.priority(class="future-input") }}
-                    <small class="help-text">⭐ = Low Priority, ⭐⭐⭐⭐⭐ = Highest Priority</small>
-                    <div class="input-line"></div>
+        <!-- Form Container -->
+        <div class="matrix-card p-4">
+            <form method="POST" class="cyber-form">
+                {{ form.hidden_tag() }}
+                
+                <!-- Title Field -->
+                <div class="form-group mb-4">
+                    <label class="text-cyber mb-2">
+                        <i class='bx bx-text'></i> Task Identifier
+                    </label>
+                    {{ form.title(class="form-control bg-cyber border-cyber text-light") }}
                 </div>
-            </div>
 
-            <div class="input-group">
-                <div class="cyber-input">
-                    <label class="input-label">Due Date <span class="required">*</span></label>
-                    {{ form.due_date(class="future-input", type="datetime-local") }}
-                    <small class="help-text">When does this task need to be completed?</small>
-                    <div class="input-line"></div>
+                <!-- Description Field -->
+                <div class="form-group mb-4">
+                    <label class="text-cyber mb-2">
+                        <i class='bx bx-detail'></i> Operation Details
+                    </label>
+                    {{ form.description(class="form-control bg-cyber border-cyber text-light", rows="4") }}
                 </div>
-            </div>
 
-            <div class="button-group">
-                <button type="submit" class="cyber-button">Create Task</button>
-                <a href="{{ url_for('app_routes.index') }}" class="cyber-button-small">Cancel</a>
-            </div>
-        </form>
+                <!-- Due Date Field -->
+                <div class="form-group mb-4">
+                    <label class="text-cyber mb-2">
+                        <i class='bx bx-time'></i> Execution Timeline
+                    </label>
+                    {{ form.due_date(class="form-control bg-cyber border-cyber text-light", type="datetime-local") }}
+                </div>
+
+                <!-- Priority Field -->
+                <div class="form-group mb-4">
+                    <label class="text-cyber mb-2">
+                        <i class='bx bx-signal-5'></i> Priority Level
+                    </label>
+                    {{ form.priority(class="form-control bg-cyber border-cyber text-light") }}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex gap-3">
+                    <button type="submit" class="cyber-btn pulse-btn">
+                        <i class='bx bx-upload'></i>
+                        <span>Initialize Task</span>
+                    </button>
+                    <a href="{{ url_for('app_routes.dashboard') }}" class="cyber-action">
+                        <i class='bx bx-arrow-back'></i>
+                        <span>Return to Control Center</span>
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<style>
-    .cyber-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
-    }
+<script>
+function updateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', { 
+        hour12: false, 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+    });
+    document.querySelector('.cyber-time').textContent = timeString;
+}
 
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-        animation: panelGlow 2s infinite alternate;
-        min-width: 400px;
-    }
-
-    .cyber-title {
-        color: #00ff9d;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .future-input {
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(0, 255, 255, 0.2);
-        color: #fff;
-        padding: 12px;
-        width: 100%;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        transition: all 0.3s ease;
-    }
-
-    .future-input:focus {
-        border-color: #00ff9d;
-        box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
-        outline: none;
-    }
-
-    .button-group {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .cyber-button {
-        background: transparent;
-        color: #00ff9d;
-        border: 2px solid #00ff9d;
-        padding: 12px 30px;
-        border-radius: 5px;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        text-decoration: none;
-    }
-
-    .cyber-button:hover {
-        background: #00ff9d;
-        color: #000;
-        box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
-    }
-
-    .cyber-button.cancel {
-        color: #ff3e3e;
-        border-color: #ff3e3e;
-    }
-
-    .cyber-button.cancel:hover {
-        background: #ff3e3e;
-        color: #000;
-        box-shadow: 0 0 20px rgba(255, 62, 62, 0.5);
-    }
-
-    @keyframes panelGlow {
-        from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
-        to { box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); }
-    }
-
-    .input-label {
-        color: #00ff9d;
-        display: block;
-        margin-bottom: 5px;
-        font-size: 0.9em;
-        letter-spacing: 1px;
-    }
-
-    .required {
-        color: #ff4757;
-        margin-left: 3px;
-    }
-
-    .help-text {
-        color: #7a7a7a;
-        font-size: 0.8em;
-        margin-top: 5px;
-        display: block;
-        font-style: italic;
-    }
-
-    .input-group {
-        margin-bottom: 20px;
-    }
-
-    .cyber-button-small {
-        background: transparent;
-        color: #00ccff;
-        border: 1px solid #00ccff;
-        padding: 8px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        margin-left: 10px;
-        font-size: 0.9em;
-        transition: all 0.3s ease;
-    }
-
-    .cyber-button-small:hover {
-        background: #00ccff;
-        color: #000;
-        box-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
-    }
-</style>
+setInterval(updateTime, 1000);
+updateTime();
+</script>
 {% endblock %}

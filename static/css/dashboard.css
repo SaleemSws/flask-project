@@ -857,6 +857,7 @@ body {
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .neural-icon {
@@ -1189,6 +1190,41 @@ body {
 
 .matrix-overlay:hover::after {
     opacity: 1;
+}
+
+/* Form Styles */
+.cyber-form .form-control {
+    background: rgba(var(--bs-dark-rgb), 0.7) !important;
+    border: 1px solid rgba(var(--bs-primary-rgb), 0.2) !important;
+    color: #fff !important;
+    font-family: 'Rajdhani', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.cyber-form .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
+    border-color: rgba(var(--bs-primary-rgb), 0.5) !important;
+    background: rgba(var(--bs-dark-rgb), 0.8) !important;
+}
+
+.cyber-form label {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cyber-form label i {
+    color: var(--primary-glow);
+    font-size: 1.2rem;
+}
+
+.cyber-form select option {
+    background: rgba(var(--bs-dark-rgb), 0.95);
+    color: #fff;
 }
 
 /* Media Queries */
