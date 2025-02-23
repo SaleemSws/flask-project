@@ -1461,20 +1461,14 @@ body {
 /* Mobile Responsive Styles */
 @media (max-width: 1200px) {
     .nav-menu {
-        flex-direction: column;
+        flex-direction: row;
         gap: 1rem;
         z-index: 1300; /* ให้สูงที่สุดเมื่ออยู่ในโหมดมือถือ */
     }
 
     .section-content {
-        position: static;
-        background: none;
-        border: none;
-        box-shadow: none;
-        margin-left: 1.5rem;
-        margin-top: 0.5rem;
-        padding: 0;
-        width: auto;
+        position: absolute;
+        width: 200px;
     }
 
     .menu-section {
@@ -1488,132 +1482,6 @@ body {
 }
 
 /* Mobile Responsive Styles */
-@media (max-width: 1200px) {
-    .nav-menu {
-        position: static; /* เปลี่ยนจาก fixed เป็น static */
-        left: 0;
-        width: 100%;
-        height: auto;
-        background: transparent;
-        flex-direction: row;
-        padding: 0;
-        transition: none;
-        border-right: none;
-        overflow-x: auto; /* เพิ่ม scroll แนวนอน */
-    }
-
-    .nav-menu::-webkit-scrollbar {
-        height: 0; /* ซ่อน scrollbar */
-    }
-
-    .menu-section {
-        padding: 0;
-        border-bottom: none;
-    }
-}
-
-/* ลบ Mobile Menu Toggle Styles ออก */
-.mobile-menu-toggle {
-    display: none; /* ซ่อนปุ่มทั้งหมด */
-}
-
-/* Alert Styles */
-.cyber-alert {
-    background: rgba(var(--bs-dark-rgb), 0.8);
-    border: 1px solid rgba(var(--bs-primary-rgb), 0.3);
-    color: #fff;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    animation: slideIn 0.3s ease-out;
-}
-
-.cyber-alert.success {
-    border-color: rgba(var(--bs-success-rgb), 0.3);
-    background: rgba(var(--bs-success-rgb), 0.1);
-}
-
-.cyber-alert.danger {
-    border-color: rgba(var(--bs-danger-rgb), 0.3);
-    background: rgba(var(--bs-danger-rgb), 0.1);
-}
-
-.cyber-alert.info {
-    border-color: rgba(var(--bs-info-rgb), 0.3);
-    background: rgba(var(--bs-info-rgb), 0.1);
-}
-
-/* Navigation Menu Styles */
-.nav-menu {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.nav-link {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-}
-
-.nav-link i {
-    font-size: 1.2rem;
-    color: var(--primary-glow);
-}
-
-.nav-link:hover {
-    color: #fff;
-    background: rgba(var(--bs-primary-rgb), 0.1);
-    border-color: rgba(var(--bs-primary-rgb), 0.2);
-    transform: translateY(-2px);
-}
-
-.nav-link.active {
-    background: rgba(var(--bs-primary-rgb), 0.15);
-    border-color: rgba(var(--bs-primary-rgb), 0.3);
-    color: #fff;
-    box-shadow: 0 0 15px rgba(var(--bs-primary-rgb), 0.2);
-}
-
-/* Responsive Navigation */
-@media (max-width: 992px) {
-    .nav-menu {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(var(--bs-dark-rgb), 0.95);
-        backdrop-filter: blur(10px);
-        padding: 1rem;
-        justify-content: space-around;
-        border-top: 1px solid rgba(var(--bs-primary-rgb), 0.2);
-        z-index: 1000;
-    }
-
-    .nav-link {
-        flex-direction: column;
-        padding: 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .nav-link i {
-        font-size: 1.5rem;
-    }
-}
-
-/* Media Queries */
 @media (max-width: 768px) {
     .stats-container,
     .tasks-grid {
@@ -1655,17 +1523,7 @@ body {
         grid-template-columns: 1fr;
     }
     .cyber-interface {
-        padding-top: 60px; /* ลดขนาดสำหรับมือถือ */
-    }
-    
-    .nav-menu {
-        padding: 0.5rem;
-    }
-    
-    .section-content {
-        position: static;
-        margin-top: 0.5rem;
-        width: 100%;
+        padding-top: 80px;
     }
 }
 
@@ -2373,4 +2231,32 @@ body {
 html, body {
     overflow-x: hidden;
     scroll-behavior: smooth;
+}
+
+/* Remove all mobile-related styles */
+.mobile-menu-toggle,
+.nav-menu-mobile,
+.nav-link-mobile {
+    display: none !important;
+}
+
+/* Update media queries to remove mobile specific rules */
+@media (max-width: 1200px) {
+    .nav-menu {
+        position: static;
+        flex-direction: row;
+        padding: 0;
+        width: auto;
+    }
+
+    .section-content {
+        position: absolute;
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cyber-interface {
+        padding-top: 80px;
+    }
 }
