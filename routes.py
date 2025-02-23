@@ -15,12 +15,32 @@ def index():
 @app_routes.route("/dashboard")
 @login_required
 def dashboard():
+    # แก้ไขการเรียงลำดับให้เรียงตาม priority มากไปน้อย และ due_date
     tasks = (
         Task.query.filter_by(user_id=current_user.id, completed=False)
-        .order_by(Task.due_date.asc())
+        .order_by(
+            Task.priority.desc(),  # เรียงจากความสำคัญมากไปน้อย
+            Task.due_date.asc(),  # แล้วค่อยเรียงตามวันที่ใกล้สุดก่อน
+        )
         .all()
     )
-    return render_template("dashboard.html", tasks=tasks)
+
+    # ดึงข้อมูล completed tasks
+    completed_tasks = Task.query.filter_by(
+        user_id=current_user.id, completed=True
+    ).count()
+
+    # นับจำนวน urgent tasks (priority >= 3)
+    urgent_tasks = Task.query.filter(
+        Task.user_id == current_user.id, Task.completed == False, Task.priority >= 3
+    ).count()
+
+    return render_template(
+        "dashboard.html",
+        tasks=tasks,
+        completed_tasks=completed_tasks,
+        urgent_tasks=urgent_tasks,
+    )
 
 
 @app_routes.route("/add_task", methods=["GET", "POST"])
@@ -32,6 +52,7 @@ def add_task():
             title=form.title.data,
             description=form.description.data,
             due_date=form.due_date.data,
+            priority=int(form.priority.data),  # เพิ่มการบันทึก priority
             created_at=datetime.utcnow(),
             user_id=current_user.id,
         )
@@ -66,6 +87,7 @@ def edit_task(task_id):
         task.title = form.title.data
         task.description = form.description.data
         task.due_date = form.due_date.data
+        task.priority = int(form.priority.data)  # เพิ่มการบันทึก priority
         db.session.commit()
         flash("Task updated!", "info")
         return redirect(url_for("app_routes.dashboard"))

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}AI Task Interface{% endblock %}
+{% block title %}Control Center{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -14,7 +14,7 @@
     <div class="scanner-line"></div>
     <div class="grid-overlay"></div>
     
-    <div class="neo-container p-4">
+    <div class="neo-container">
         <!-- AI Interface Header -->
         <div class="ai-header mb-4">
             <div class="ai-status-ring">
@@ -24,167 +24,223 @@
             </div>
             <div class="header-content">
                 <h1 class="cyber-title">
-                    <i class='bx bx-chip me-2'></i>AI Task Control Center
+                    <i class='bx bx-chip me-2'></i>Control Center
                     <div class="glitch-effect"></div>
                 </h1>
                 <div class="system-info">
-                    <span class="status-indicator">SYSTEM ACTIVE</span>
+                    <span class="status-indicator">SYSTEM OPERATIONAL</span>
+                    <span class="divider">|</span>
+                    <span class="user-id">USER: {{ current_user.username }}</span>
                     <span class="divider">|</span>
                     <span class="cyber-time"></span>
-                    <span class="divider">|</span>
-                    <span class="cyber-date"></span>
                 </div>
             </div>
         </div>
 
-        <!-- Neural Stats Grid -->
-        <div class="neural-grid mb-4">
-            <div class="matrix-card">
-                <div class="holo-effect"></div>
-                <div class="card-inner">
-                    <div class="neural-icon">
-                        <i class='bx bx-brain'></i>
+        <!-- Stats Overview -->
+        <div class="stats-overview mb-4">
+            <div class="stats-grid">
+                <div class="stat-panel">
+                    <div class="stat-icon">
+                        <i class='bx bx-task'></i>
                     </div>
-                    <div class="neural-data">
-                        <div class="data-value">{{ tasks|length }}</div>
-                        <div class="data-label">Active Processes</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ tasks|length }}</div>
+                        <div class="stat-label">Active Tasks</div>
                     </div>
-                    <div class="neural-graph"></div>
+                    <!-- แก้ไขการคำนวณ progress โดยเพิ่มการตรวจสอบ division by zero -->
+                    <div class="stat-progress" style="--progress: {{ (tasks|length / 10 if tasks|length else 0) * 100 }}%"></div>
                 </div>
-            </div>
-            
-            <div class="matrix-card">
-                <div class="holo-effect"></div>
-                <div class="card-inner">
-                    <div class="neural-icon">
-                        <i class='bx bx-check-shield'></i>
+
+                <div class="stat-panel">
+                    <div class="stat-icon">
+                        <i class='bx bx-calendar-check'></i>
                     </div>
-                    <div class="neural-data">
-                        <div class="data-value">{{ completed_count if completed_count else 0 }}</div>
-                        <div class="data-label">Completed Tasks</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ completed_tasks|default(0) }}</div>
+                        <div class="stat-label">Completed</div>
                     </div>
-                    <div class="neural-graph"></div>
+                    <!-- แก้ไขการคำนวณ completion rate -->
+                    {% set total_tasks = tasks|length + completed_tasks|default(0) %}
+                    <div class="stat-progress success" style="--progress: {{ (completed_tasks|default(0) / total_tasks * 100) if total_tasks > 0 else 0 }}%"></div>
                 </div>
-            </div>
-            
-            <div class="matrix-card">
-                <div class="holo-effect"></div>
-                <div class="card-inner">
-                    <div class="neural-icon">
+
+                <div class="stat-panel">
+                    <div class="stat-icon">
                         <i class='bx bx-alarm-exclamation'></i>
                     </div>
-                    <div class="neural-data">
-                        <div class="data-value">{{ priority_count if priority_count else 0 }}</div>
-                        <div class="data-label">Priority Signals</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ urgent_tasks|default(0) }}</div>
+                        <div class="stat-label">Priority Tasks</div>
                     </div>
-                    <div class="neural-graph"></div>
+                    <!-- แก้ไขการคำนวณ priority rate -->
+                    <div class="stat-progress warning" style="--progress: {{ (urgent_tasks|default(0) / tasks|length * 100) if tasks|length > 0 else 0 }}%"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Command Center -->
-        <div class="command-center mb-4">
+        <!-- Quick Actions -->
+        <div class="quick-actions mb-4">
             <a href="{{ url_for('app_routes.add_task') }}" class="cyber-btn pulse-btn">
                 <i class='bx bx-plus-circle'></i>
-                <span class="button-text">INITIALIZE NEW TASK</span>
-                <div class="button-glow"></div>
+                <span>New Task</span>
             </a>
+            <a href="{{ url_for('app_routes.history') }}" class="cyber-action">
+                <i class='bx bx-history'></i>
+                <span>View History</span>
+            </a>
+            <div class="search-box">
+                <form action="{{ url_for('app_routes.search_tasks') }}" method="GET">
+                    <div class="search-input">
+                        <i class='bx bx-search'></i>
+                        <input type="text" name="query" placeholder="Search tasks..." class="form-control bg-cyber">
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <!-- Task Matrix -->
-        <div class="task-matrix">
+        <!-- Task Categories -->
+        <div class="task-categories mb-4">
+            <div class="category-tabs">
+                <button class="tab-btn active" data-filter="all">All Tasks</button>
+                <button class="tab-btn" data-filter="priority">Priority</button>
+                <button class="tab-btn" data-filter="today">Today</button>
+                <button class="tab-btn" data-filter="upcoming">Upcoming</button>
+            </div>
+        </div>
+
+        <!-- Tasks Grid -->
+        <div class="tasks-grid">
             {% for task in tasks %}
-            <div class="matrix-task" data-priority="{{ task.priority }}">
-                <div class="task-hologram"></div>
-                <div class="priority-indicator"></div>
-                <div class="task-content">
-                    <div class="task-header">
-                        <span class="task-id">#{{ task.id }}</span>
-                        <span class="task-status">ACTIVE</span>
+            <div class="task-card" data-priority="{{ task.priority }}">
+                <div class="card-body">
+                    <!-- Title First -->
+                    <h3 class="task-title mb-2">{{ task.title }}</h3>
+                    
+                    <!-- Priority Stars -->
+                    <div class="priority-stars mb-3">
+                        {% for i in range(task.priority|int) %}
+                        <i class='bx bxs-star'></i>
+                        {% endfor %}
+                        {% for i in range(5 - task.priority|int) %}
+                        <i class='bx bx-star'></i>
+                        {% endfor %}
                     </div>
-                    <h3 class="task-title">{{ task.title }}</h3>
+                    
+                    <!-- Description -->
+                    <p class="task-description">{{ task.description }}</p>
+                    
                     <div class="task-meta">
-                        <i class='bx bx-time-five'></i>
-                        <span class="countdown" data-due="{{ task.due_date.strftime('%Y-%m-%d %H:%M') }}">
-                            {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}
-                        </span>
+                        <div class="due-date">
+                            <i class='bx bx-time-five'></i>
+                            <span class="countdown" data-due="{{ task.due_date.strftime('%Y-%m-%d %H:%M') }}">
+                                {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}
+                            </span>
+                        </div>
                     </div>
+
+                    <!-- Actions -->
                     <div class="task-actions">
                         <a href="{{ url_for('app_routes.edit_task', task_id=task.id) }}" 
                            class="cyber-action edit">
                            <i class='bx bx-edit'></i>
-                           <span>MODIFY</span>
+                           <span>Modify</span>
                         </a>
                         <form action="{{ url_for('app_routes.complete_task', task_id=task.id) }}" 
                               method="POST" class="d-inline">
                             <button type="submit" class="cyber-action complete">
                                 <i class='bx bx-check'></i>
-                                <span>EXECUTE</span>
+                                <span>Complete</span>
                             </button>
                         </form>
                         <a href="{{ url_for('app_routes.delete_task', task_id=task.id) }}" 
                            class="cyber-action delete"
-                           onclick="return confirm('CONFIRM TASK TERMINATION?');">
+                           onclick="return confirm('Confirm task deletion?');">
                            <i class='bx bx-trash'></i>
-                           <span>TERMINATE</span>
+                           <span>Delete</span>
                         </a>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        
-        <!-- New Card -->
-        <div class="card bg-cyber border-cyber p-4 rounded-3 matrix-overlay">
-            <div class="d-flex align-items-center gap-3">
-                <i class="bx bx-brain display-4 neural-icon"></i>
-                <div>
-                    <h3 class="text-cyber mb-0">Title</h3>
-                    <p class="text-light mb-0">Description</p>
-                </div>
+            {% else %}
+            <div class="no-tasks">
+                <i class='bx bx-list-plus'></i>
+                <p>No active tasks. Create a new task to get started.</p>
+                <a href="{{ url_for('app_routes.add_task') }}" class="cyber-btn">
+                    <i class='bx bx-plus-circle'></i>
+                    <span>Create Task</span>
+                </a>
             </div>
+            {% endfor %}
         </div>
     </div>
 </div>
 
-<!-- Move scripts here, inside content block -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
 <script>
-function updateInterface() {
+// Real-time clock update
+function updateTime() {
     const now = new Date();
-    const time = now.toLocaleTimeString('en-US', { 
-        hour12: false, 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit' 
-    });
-    const date = now.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    }).replace(/\//g, '.');
-    
-    document.querySelector('.cyber-time').textContent = time;
-    document.querySelector('.cyber-date').textContent = date;
+    document.querySelector('.cyber-time').textContent = 
+        now.toLocaleTimeString('en-US', { 
+            hour12: false, 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        });
 }
 
-setInterval(updateInterface, 1000);
-updateInterface();
+setInterval(updateTime, 1000);
+updateTime();
 
-// Neural graph animation
-document.querySelectorAll('.neural-graph').forEach(graph => {
-    const points = 20;
-    const values = Array.from({length: points}, () => Math.random());
-    
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', `0 0 ${points-1} 1`);
-    
-    const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    const points_str = values.map((v, i) => `${i},${v}`).join(' ');
-    polyline.setAttribute('points', points_str);
-    
-    svg.appendChild(polyline);
-    graph.appendChild(svg);
+// Task filtering
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        filterTasks(filter);
+        
+        // Update active state
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
 });
+
+function filterTasks(filter) {
+    const today = new Date();
+    const cards = document.querySelectorAll('.task-card');
+    
+    cards.forEach(card => {
+        const dueDate = new Date(card.querySelector('.countdown').dataset.due);
+        const priority = parseInt(card.dataset.priority);
+        
+        switch(filter) {
+            case 'priority':
+                card.style.display = priority >= 3 ? 'flex' : 'none';
+                break;
+            case 'today':
+                card.style.display = isSameDay(dueDate, today) ? 'flex' : 'none';
+                break;
+            case 'upcoming':
+                card.style.display = isUpcoming(dueDate, today) ? 'flex' : 'none';
+                break;
+            default:
+                card.style.display = 'flex';
+        }
+    });
+}
+
+function isSameDay(date1, date2) {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+}
+
+function isUpcoming(date, today) {
+    const diffTime = date - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 && diffDays <= 7;
+}
 </script>
 {% endblock %}

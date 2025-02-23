@@ -52,7 +52,13 @@ class TaskForm(FlaskForm):
     )
     priority = SelectField(
         "Priority",
-        choices=[(str(i), "⭐" * i) for i in range(6)],
+        choices=[
+            ("1", "⭐ Low"),
+            ("2", "⭐⭐ Medium-Low"),
+            ("3", "⭐⭐⭐ Medium"),
+            ("4", "⭐⭐⭐⭐ Medium-High"),
+            ("5", "⭐⭐⭐⭐⭐ High"),
+        ],
         validators=[DataRequired()],
     )
     submit = SubmitField("Submit")
