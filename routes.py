@@ -1,14 +1,6 @@
-from flask import (
-    Blueprint,
-    render_template,
-    request,
-    redirect,
-    url_for,
-    flash,
-    send_from_directory,
-)
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models import db, Task, User
-from forms import TaskForm, LoginForm  # เพิ่ม LoginForm
+from forms import TaskForm, LoginForm, RegisterForm  # เพิ่ม LoginForm
 from datetime import datetime
 from flask_login import login_required, logout_user, login_user
 
@@ -103,22 +95,22 @@ def complete_task(task_id):
 
 @app_routes.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        if User.query.filter_by(username=username).first():
+    form = RegisterForm()  # เพิ่มการใช้ RegisterForm
+    if form.validate_on_submit():
+        # ตรวจสอบว่ามี username ซ้ำหรือไม่
+        if User.query.filter_by(username=form.username.data).first():
             flash("Username already exists!", "danger")
             return redirect(url_for("app_routes.register"))
 
-        new_user = User(username=username)
-        new_user.set_password(password)  # ใช้ set_password() เพื่อแฮชรหัสผ่านก่อนบันทึก
+        # สร้าง User ใหม่
+        new_user = User(username=form.username.data)
+        new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
         flash("Account created! Please log in.", "success")
         return redirect(url_for("app_routes.login"))
 
-    return render_template("register.html")
+    return render_template("register.html", form=form)  # ส่ง form ไปยัง template
 
 
 @app_routes.route("/login", methods=["GET", "POST"])

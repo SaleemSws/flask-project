@@ -7,7 +7,8 @@ from wtforms import (
     SubmitField,
     SelectField,
 )
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, ValidationError
+from models import User
 
 
 class LoginForm(FlaskForm):
@@ -18,10 +19,29 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     username = StringField(
-        "Username", validators=[DataRequired(), Length(min=3, max=20)]
+        "Username",
+        validators=[
+            DataRequired(),
+            Length(
+                min=3, max=20, message="Username must be between 3 and 20 characters"
+            ),
+        ],
     )
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=6)])
+    password = PasswordField(
+        "Password",
+        validators=[
+            DataRequired(),
+            Length(min=6, message="Password must be at least 6 characters"),
+        ],
+    )
     submit = SubmitField("Register")
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError(
+                "Username already exists. Please choose a different one."
+            )
 
 
 class TaskForm(FlaskForm):
