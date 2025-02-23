@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models import db, Task, User
-from forms import TaskForm, LoginForm, RegisterForm  # เพิ่ม LoginForm
+from forms import TaskForm, LoginForm, RegisterForm
 from datetime import datetime
-from flask_login import login_required, logout_user, login_user
+from flask_login import login_required, logout_user, login_user, current_user
 
 app_routes = Blueprint("app_routes", __name__)
 
@@ -15,7 +15,11 @@ def index():
 @app_routes.route("/dashboard")
 @login_required
 def dashboard():
-    tasks = Task.query.filter_by(completed=False).order_by(Task.due_date.asc()).all()
+    tasks = (
+        Task.query.filter_by(user_id=current_user.id, completed=False)
+        .order_by(Task.due_date.asc())
+        .all()
+    )
     return render_template("dashboard.html", tasks=tasks)
 
 
@@ -29,6 +33,7 @@ def add_task():
             description=form.description.data,
             due_date=form.due_date.data,
             created_at=datetime.utcnow(),
+            user_id=current_user.id,
         )
         db.session.add(new_task)
         db.session.commit()
@@ -38,9 +43,10 @@ def add_task():
 
 
 @app_routes.route("/delete_task/<int:task_id>")
+@login_required
 def delete_task(task_id):
     task = Task.query.get(task_id)
-    if task:
+    if task and task.user_id == current_user.id:
         db.session.delete(task)
         db.session.commit()
         flash("Task deleted!", "danger")
@@ -48,10 +54,14 @@ def delete_task(task_id):
 
 
 @app_routes.route("/edit_task/<int:task_id>", methods=["GET", "POST"])
+@login_required
 def edit_task(task_id):
-    task = Task.query.get(task_id)
-    form = TaskForm(obj=task)
+    task = Task.query.get_or_404(task_id)
+    if task.user_id != current_user.id:
+        flash("Access denied!", "danger")
+        return redirect(url_for("app_routes.dashboard"))
 
+    form = TaskForm(obj=task)
     if form.validate_on_submit():
         task.title = form.title.data
         task.description = form.description.data
@@ -64,29 +74,35 @@ def edit_task(task_id):
 
 
 @app_routes.route("/history")
+@login_required
 def history():
     completed_tasks = (
-        Task.query.filter_by(completed=True).order_by(Task.completed_at.desc()).all()
+        Task.query.filter_by(user_id=current_user.id, completed=True)
+        .order_by(Task.completed_at.desc())
+        .all()
     )
     return render_template("history.html", tasks=completed_tasks)
 
 
 @app_routes.route("/search", methods=["GET", "POST"])
 def search_tasks():
-    query = request.args.get("query", "").strip()  # ดึงค่าจาก input
+    query = request.args.get("query", "").strip()
     tasks = []
 
-    if query:  # ถ้ามีการค้นหา
-        tasks = Task.query.filter(
-            Task.title.ilike(f"%{query}%")
-        ).all()  # ค้นหาแบบ case-insensitive
+    if query:
+        tasks = Task.query.filter(Task.title.ilike(f"%{query}%")).all()
 
     return render_template("search.html", tasks=tasks, query=query)
 
 
 @app_routes.route("/complete/<int:task_id>", methods=["POST"])
+@login_required
 def complete_task(task_id):
     task = Task.query.get_or_404(task_id)
+    if task.user_id != current_user.id:
+        flash("Access denied!", "danger")
+        return redirect(url_for("app_routes.dashboard"))
+
     task.completed = True
     task.completed_at = datetime.utcnow()
     db.session.commit()
@@ -95,14 +111,12 @@ def complete_task(task_id):
 
 @app_routes.route("/register", methods=["GET", "POST"])
 def register():
-    form = RegisterForm()  # เพิ่มการใช้ RegisterForm
+    form = RegisterForm()
     if form.validate_on_submit():
-        # ตรวจสอบว่ามี username ซ้ำหรือไม่
         if User.query.filter_by(username=form.username.data).first():
             flash("Username already exists!", "danger")
             return redirect(url_for("app_routes.register"))
 
-        # สร้าง User ใหม่
         new_user = User(username=form.username.data)
         new_user.set_password(form.password.data)
         db.session.add(new_user)
@@ -110,7 +124,7 @@ def register():
         flash("Account created! Please log in.", "success")
         return redirect(url_for("app_routes.login"))
 
-    return render_template("register.html", form=form)  # ส่ง form ไปยัง template
+    return render_template("register.html", form=form)
 
 
 @app_routes.route("/login", methods=["GET", "POST"])

@@ -27,7 +27,12 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime, nullable=True)
     priority = db.Column(db.Integer, default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user = db.relationship("User", backref=db.backref("tasks", lazy=True))
 
     def mark_complete(self):
         self.completed = True
-        self.completed_at = datetime.utcnow()
+        self.completed_at = datetime.utcnow
+
+    def __repr__(self):
+        return f"<Task {self.title}>"
