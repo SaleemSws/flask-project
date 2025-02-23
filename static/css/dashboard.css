@@ -1424,3 +1424,147 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Hero Section Styles */
+.hero-section {
+    padding: 4rem 0;
+    position: relative;
+}
+
+.cyber-logo {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-rings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.logo-rings .ring {
+    border: 2px solid var(--cyber-blue);
+    border-radius: 50%;
+    position: absolute;
+    animation: pulse 2s infinite;
+}
+
+.logo-rings .ring:nth-child(1) {
+    width: 100%;
+    height: 100%;
+    animation-delay: 0s;
+}
+
+.logo-rings .ring:nth-child(2) {
+    width: 80%;
+    height: 80%;
+    left: 10%;
+    top: 10%;
+    animation-delay: 0.3s;
+}
+
+.logo-rings .ring:nth-child(3) {
+    width: 60%;
+    height: 60%;
+    left: 20%;
+    top: 20%;
+    animation-delay: 0.6s;
+}
+
+.mega-title {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    position: relative;
+    animation: glow 3s infinite;
+}
+
+.cyber-subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 4rem 0;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: var(--cyber-blue);
+    margin-bottom: 1.5rem;
+    animation: pulse 2s infinite;
+}
+
+.feature-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 1rem;
+}
+
+.feature-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* System Status */
+.system-metrics {
+    padding: 2rem 0;
+    border-top: 1px solid rgba(var(--bs-primary-rgb), 0.2);
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--cyber-blue);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--cyber-blue);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .mega-title {
+        font-size: 2.5rem;
+    }
+    
+    .cyber-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .features-grid {
+        gap: 1rem;
+    }
+    
+    .hero-section {
+        padding: 2rem 0;
+    }
+}
