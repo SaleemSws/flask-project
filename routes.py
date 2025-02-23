@@ -203,3 +203,99 @@ def analytics():
         priority_dist=priority_dist,
         monthly_completed=monthly_completed,
     )
+
+
+@app_routes.route("/system-status")
+@login_required
+def system_status():
+    # System metrics
+    user_count = User.query.count()
+    total_tasks_system = Task.query.count()
+    active_tasks = Task.query.filter_by(completed=False).count()
+
+    # User performance ranking (top 5)
+    top_users = (
+        db.session.query(User, db.func.count(Task.id).label("task_count"))
+        .join(Task)
+        .group_by(User)
+        .order_by(db.text("task_count DESC"))
+        .limit(5)
+        .all()
+    )
+
+    return render_template(
+        "system_status.html",
+        user_count=user_count,
+        total_tasks_system=total_tasks_system,
+        active_tasks=active_tasks,
+        top_users=top_users,
+    )
+
+
+@app_routes.route("/neural-assistant")
+@login_required
+def neural_assistant():
+    # Get user's task patterns
+    user_tasks = Task.query.filter_by(user_id=current_user.id).all()
+
+    # Calculate optimal task scheduling
+    urgent_tasks = Task.query.filter(
+        Task.user_id == current_user.id, Task.completed == False, Task.priority >= 4
+    ).all()
+
+    # Get upcoming deadlines
+    upcoming_deadlines = (
+        Task.query.filter(
+            Task.user_id == current_user.id,
+            Task.completed == False,
+            Task.due_date > datetime.utcnow(),
+        )
+        .order_by(Task.due_date.asc())
+        .limit(5)
+        .all()
+    )
+
+    return render_template(
+        "neural_assistant.html",
+        urgent_tasks=urgent_tasks,
+        upcoming_deadlines=upcoming_deadlines,
+        task_count=len(user_tasks),
+    )
+
+
+@app_routes.route("/task-matrix")
+@login_required
+def task_matrix():
+    # Get tasks based on urgency and importance
+    urgent_important = Task.query.filter(
+        Task.user_id == current_user.id, Task.priority >= 4, Task.completed == False
+    ).all()
+
+    urgent_not_important = Task.query.filter(
+        Task.user_id == current_user.id,
+        Task.priority <= 3,
+        Task.due_date <= datetime.utcnow(),
+        Task.completed == False,
+    ).all()
+
+    not_urgent_important = Task.query.filter(
+        Task.user_id == current_user.id,
+        Task.priority >= 4,
+        Task.due_date > datetime.utcnow(),
+        Task.completed == False,
+    ).all()
+
+    not_urgent_not_important = Task.query.filter(
+        Task.user_id == current_user.id,
+        Task.priority <= 3,
+        Task.due_date > datetime.utcnow(),
+        Task.completed == False,
+    ).all()
+
+    return render_template(
+        "task_matrix.html",
+        urgent_important=urgent_important,
+        urgent_not_important=urgent_not_important,
+        not_urgent_important=not_urgent_important,
+        not_urgent_not_important=not_urgent_not_important,
+    )
