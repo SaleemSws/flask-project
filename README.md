@@ -179,6 +179,8 @@ flask db init
 flask db migrate
 flask db upgrade
 ```
+ให้ไฟล์ site.db อยู่ในโฟลเดอร์ instance
+
 4. รันแอป  app.py 
 
 ### การใช้งานระบบ
