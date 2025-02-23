@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Task Matrix{% endblock %}
+
+{% block content %}
+<div class="cyber-interface">
+    <div class="neo-container">
+        <div class="ai-header mb-4">
+            <h1 class="cyber-title">
+                <i class='bx bx-grid-alt'></i> Priority Matrix
+            </h1>
+            <div class="system-info">
+                <span class="status-indicator">MATRIX OPERATIONAL</span>
+            </div>
+        </div>
+
+        <div class="matrix-grid">
+            <!-- Urgent & Important -->
+            <div class="matrix-quadrant critical">
+                <div class="quadrant-header">
+                    <i class='bx bx-error-circle'></i>
+                    <h3>Do First</h3>
+                    <span class="task-count">{{ urgent_important|length }}</span>
+                </div>
+                <div class="task-list">
+                    {% for task in urgent_important %}
+                    <div class="matrix-task-card">
+                        <h4>{{ task.title }}</h4>
+                        <p>{{ task.description }}</p>
+                        <div class="task-meta">
+                            <span class="due-date">
+                                <i class='bx bx-time'></i>
+                                {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Urgent & Not Important -->
+            <div class="matrix-quadrant urgent">
+                <div class="quadrant-header">
+                    <i class='bx bx-time'></i>
+                    <h3>Schedule</h3>
+                    <span class="task-count">{{ urgent_not_important|length }}</span>
+                </div>
+                <div class="task-list">
+                    {% for task in urgent_not_important %}
+                    <div class="matrix-task-card">
+                        <h4>{{ task.title }}</h4>
+                        <p>{{ task.description }}</p>
+                        <div class="task-meta">
+                            <span class="due-date">
+                                <i class='bx bx-time'></i>
+                                {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Not Urgent & Important -->
+            <div class="matrix-quadrant important">
+                <div class="quadrant-header">
+                    <i class='bx bx-target-lock'></i>
+                    <h3>Plan</h3>
+                    <span class="task-count">{{ not_urgent_important|length }}</span>
+                </div>
+                <div class="task-list">
+                    {% for task in not_urgent_important %}
+                    <div class="matrix-task-card">
+                        <h4>{{ task.title }}</h4>
+                        <p>{{ task.description }}</p>
+                        <div class="task-meta">
+                            <span class="due-date">
+                                <i class='bx bx-time'></i>
+                                {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Not Urgent & Not Important -->
+            <div class="matrix-quadrant normal">
+                <div class="quadrant-header">
+                    <i class='bx bx-list-ul'></i>
+                    <h3>Delegate</h3>
+                    <span class="task-count">{{ not_urgent_not_important|length }}</span>
+                </div>
+                <div class="task-list">
+                    {% for task in not_urgent_not_important %}
+                    <div class="matrix-task-card">
+                        <h4>{{ task.title }}</h4>
+                        <p>{{ task.description }}</p>
+                        <div class="task-meta">
+                            <span class="due-date">
+                                <i class='bx bx-time'></i>
+                                {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

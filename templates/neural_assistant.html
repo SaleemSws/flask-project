@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Neural Assistant{% endblock %}
+
+{% block content %}
+<div class="cyber-interface">
+    <div class="neo-container">
+        <div class="ai-header mb-4">
+            <h1 class="cyber-title">
+                <i class='bx bx-brain'></i> Neural Task Assistant
+            </h1>
+            <div class="system-info">
+                <span class="status-indicator">AI CORE ACTIVE</span>
+            </div>
+        </div>
+
+        <div class="neural-grid">
+            <!-- Priority Tasks -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-error-circle'></i>
+                </div>
+                <h3 class="text-cyber">Critical Tasks</h3>
+                <div class="urgent-tasks-list">
+                    {% for task in urgent_tasks %}
+                    <div class="task-item priority-{{ task.priority }}">
+                        <div class="task-header">
+                            <h4>{{ task.title }}</h4>
+                            <span class="task-deadline">{{ task.due_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                        </div>
+                        <p>{{ task.description }}</p>
+                    </div>
+                    {% else %}
+                    <p class="no-data">No critical tasks detected</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-time'></i>
+                </div>
+                <h3 class="text-cyber">Timeline Analysis</h3>
+                <div class="deadline-list">
+                    {% for task in upcoming_deadlines %}
+                    <div class="deadline-item">
+                        <div class="time-indicator"></div>
+                        <div class="deadline-info">
+                            <h4>{{ task.title }}</h4>
+                            <span>Due: {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="no-data">No upcoming deadlines</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- AI Recommendations -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-bulb'></i>
+                </div>
+                <h3 class="text-cyber">Neural Recommendations</h3>
+                <div class="ai-recommendations">
+                    {% if urgent_tasks %}
+                    <div class="recommendation">
+                        <i class='bx bx-trending-up'></i>
+                        <p>Priority focus required on {{ urgent_tasks|length }} critical tasks</p>
+                    </div>
+                    {% endif %}
+                    {% if upcoming_deadlines %}
+                    <div class="recommendation">
+                        <i class='bx bx-calendar'></i>
+                        <p>{{ upcoming_deadlines|length }} tasks approaching deadline</p>
+                    </div>
+                    {% endif %}
+                    <div class="recommendation">
+                        <i class='bx bx-stats'></i>
+                        <p>System managing {{ task_count }} total tasks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

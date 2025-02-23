@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}System Status{% endblock %}
+
+{% block content %}
+<div class="cyber-interface">
+    <div class="neo-container">
+        <div class="ai-header mb-4">
+            <h1 class="cyber-title">
+                <i class='bx bx-chip'></i> System Diagnostics
+            </h1>
+            <div class="system-info">
+                <span class="status-indicator">ALL SYSTEMS OPERATIONAL</span>
+            </div>
+        </div>
+
+        <div class="neural-grid">
+            <!-- System Metrics -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-server'></i>
+                </div>
+                <h3 class="text-cyber">Core Metrics</h3>
+                <div class="system-metrics-list">
+                    <div class="metric-item">
+                        <span class="label">Active Users</span>
+                        <span class="value">{{ user_count }}</span>
+                        <div class="progress-cyber">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <span class="label">Total Tasks</span>
+                        <span class="value">{{ total_tasks_system }}</span>
+                        <div class="progress-cyber">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <span class="label">Active Operations</span>
+                        <span class="value">{{ active_tasks }}</span>
+                        <div class="progress-cyber">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Users -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-group'></i>
+                </div>
+                <h3 class="text-cyber">Top Operators</h3>
+                <div class="top-users-list">
+                    {% for user, task_count in top_users %}
+                    <div class="user-item">
+                        <div class="user-info">
+                            <i class='bx bx-user-circle'></i>
+                            <span class="username">{{ user.username }}</span>
+                        </div>
+                        <span class="task-count">{{ task_count }} tasks</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-pulse'></i>
+                </div>
+                <h3 class="text-cyber">System Health</h3>
+                <div class="health-indicators">
+                    <div class="health-item">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Database Operational</span>
+                    </div>
+                    <div class="health-item">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Neural Core Active</span>
+                    </div>
+                    <div class="health-item">
+                        <i class='bx bx-check-circle'></i>
+                        <span>Security Protocols Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
