@@ -6,7 +6,6 @@ from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 
-# กำหนด static folder ให้ชัดเจน
 app = Flask(__name__)
 
 app.config.from_object(Config)
