@@ -1798,3 +1798,48 @@ body {
 .stat-progress.warning {
     background: linear-gradient(90deg, var(--bs-warning-rgb), transparent);
 }
+
+/* Analytics Components */
+.priority-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.priority-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: rgba(var(--bs-dark-rgb), 0.3);
+    border-radius: 4px;
+}
+
+.priority-bar::after {
+    content: '';
+    height: 4px;
+    width: calc(var(--value) * 20px);
+    background: var(--primary-glow);
+    border-radius: 2px;
+}
+
+.priority-bar[data-priority="5"]::after {
+    background: #dc3545;
+}
+
+.priority-bar[data-priority="4"]::after {
+    background: #fd7e14;
+}
+
+.priority-bar[data-priority="3"]::after {
+    background: #ffc107;
+}
+
+.priority-bar[data-priority="2"]::after {
+    background: #198754;
+}
+
+.priority-bar[data-priority="1"]::after {
+    background: #0dcaf0;
+}

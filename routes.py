@@ -167,3 +167,39 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("app_routes.login"))
+
+
+@app_routes.route("/analytics")
+@login_required
+def analytics():
+    # Statistics for tasks
+    total_tasks = Task.query.filter_by(user_id=current_user.id).count()
+    completed_tasks = Task.query.filter_by(
+        user_id=current_user.id, completed=True
+    ).count()
+    pending_tasks = Task.query.filter_by(
+        user_id=current_user.id, completed=False
+    ).count()
+
+    # Priority distribution
+    priority_dist = {
+        i: Task.query.filter_by(user_id=current_user.id, priority=i).count()
+        for i in range(1, 6)
+    }
+
+    # Monthly completion rate
+    current_month = datetime.utcnow().month
+    monthly_completed = Task.query.filter(
+        Task.user_id == current_user.id,
+        Task.completed == True,
+        db.extract("month", Task.completed_at) == current_month,
+    ).count()
+
+    return render_template(
+        "analytics.html",
+        total_tasks=total_tasks,
+        completed_tasks=completed_tasks,
+        pending_tasks=pending_tasks,
+        priority_dist=priority_dist,
+        monthly_completed=monthly_completed,
+    )

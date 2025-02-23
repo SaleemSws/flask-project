@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Analytics Core{% endblock %}
+
+{% block content %}
+<div class="cyber-interface">
+    <div class="neo-container">
+        <div class="ai-header mb-4">
+            <h1 class="cyber-title"><i class='bx bx-line-chart'></i> Analytics Core</h1>
+        </div>
+
+        <div class="neural-grid">
+            <!-- Task Distribution -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-pie-chart-alt'></i>
+                </div>
+                <h3 class="text-cyber">Task Distribution</h3>
+                <div class="neural-data">
+                    <div class="data-value">{{ completed_tasks }}/{{ total_tasks }}</div>
+                    <div class="progress-cyber">
+                        <div class="progress-bar" style="width: {{ (completed_tasks/total_tasks*100) if total_tasks > 0 else 0 }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Priority Matrix -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-signal-5'></i>
+                </div>
+                <h3 class="text-cyber">Priority Distribution</h3>
+                <div class="priority-chart">
+                    {% for priority, count in priority_dist.items() %}
+                    <div class="priority-bar" data-priority="{{ priority }}" style="--value: {{ count }}">
+                        <span class="label">P{{ priority }}</span>
+                        <span class="value">{{ count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Monthly Performance -->
+            <div class="matrix-card">
+                <div class="neural-icon">
+                    <i class='bx bx-calendar-check'></i>
+                </div>
+                <h3 class="text-cyber">Monthly Performance</h3>
+                <div class="neural-data">
+                    <div class="data-value">{{ monthly_completed }}</div>
+                    <div class="data-label">Tasks Completed This Month</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
