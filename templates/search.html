@@ -1,21 +1,91 @@
 {% extends "base.html" %}
-{% block title %}Search Tasks{% endblock %}
+{% block title %}Neural Search{% endblock %}
 
 {% block content %}
-    <h2>Search Tasks</h2>
-    <form method="GET">
-        <input type="text" name="query" value="{{ query }}" placeholder="Search for tasks...">
-        <button type="submit">Search</button>
-    </form>
+<div class="cyber-interface">
+    <div class="neo-container">
+        <div class="ai-header mb-4">
+            <h1 class="cyber-title">
+                <i class='bx bx-search-alt'></i> Neural Search Engine
+            </h1>
+            <div class="system-info">
+                <span class="status-indicator">SEARCH CORE ACTIVE</span>
+            </div>
+        </div>
 
-    {% if tasks %}
-        <h3>Search Results</h3>
-        <ul>
-            {% for task in tasks %}
-                <li>{{ task.title }} - Due: {{ task.due_date }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No tasks found.</p>
-    {% endif %}
+        <!-- Search Form -->
+        <div class="matrix-card mb-4">
+            <form action="{{ url_for('app_routes.search_tasks') }}" method="GET" class="cyber-search-form">
+                <div class="search-field">
+                    <i class='bx bx-search'></i>
+                    <input type="text" name="query" 
+                           value="{{ query }}" 
+                           class="form-control bg-cyber" 
+                           placeholder="Initialize search sequence...">
+                    <button type="submit" class="cyber-btn">
+                        <i class='bx bx-radar'></i>
+                        <span>Scan</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search Results -->
+        <div class="search-results">
+            {% if query %}
+                {% if tasks %}
+                    <div class="result-header">
+                        <i class='bx bx-data'></i>
+                        <span>Found {{ tasks|length }} matches for "{{ query }}"</span>
+                    </div>
+                    <div class="tasks-grid">
+                        {% for task in tasks %}
+                        <div class="task-card" data-priority="{{ task.priority }}">
+                            <div class="card-body">
+                                <h3 class="task-title mb-2">{{ task.title }}</h3>
+                                <div class="priority-stars mb-3">
+                                    {% for i in range(task.priority|int) %}
+                                    <i class='bx bxs-star'></i>
+                                    {% endfor %}
+                                    {% for i in range(5 - task.priority|int) %}
+                                    <i class='bx bx-star'></i>
+                                    {% endfor %}
+                                </div>
+                                <p class="task-description">{{ task.description }}</p>
+                                <div class="task-meta">
+                                    <div class="due-date">
+                                        <i class='bx bx-time-five'></i>
+                                        <span>{{ task.due_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                                    </div>
+                                    <div class="status-badge {% if task.completed %}completed{% endif %}">
+                                        <i class='bx {% if task.completed %}bx-check-circle{% else %}bx-time{% endif %}'></i>
+                                        <span>{{ 'Completed' if task.completed else 'Pending' }}</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <a href="{{ url_for('app_routes.edit_task', task_id=task.id) }}" class="cyber-action edit">
+                                        <i class='bx bx-edit'></i>
+                                        <span>Modify</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-results matrix-card">
+                        <i class='bx bx-error-circle'></i>
+                        <p>No matches found for "{{ query }}"</p>
+                        <span class="suggestion">Try different search parameters</span>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="search-prompt matrix-card">
+                    <i class='bx bx-command'></i>
+                    <p>Enter search parameters to begin</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

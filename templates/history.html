@@ -1,27 +1,73 @@
 {% extends "base.html" %}
-{% block title %}History{% endblock %}
+{% block title %}Task History{% endblock %}
 
 {% block content %}
-    <h2>Completed Tasks</h2>
-    
-    {% if tasks %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Completed At</th>
-                </tr>
-            </thead>
-            <tbody>
+<div class="cyber-interface">
+    <div class="neo-container">
+        <div class="ai-header mb-4">
+            <h1 class="cyber-title">
+                <i class='bx bx-history'></i> Operations Archive
+            </h1>
+            <div class="system-info">
+                <span class="status-indicator">ACCESSING RECORDS</span>
+            </div>
+        </div>
+
+        <!-- History Timeline -->
+        <div class="history-timeline">
+            {% if tasks %}
                 {% for task in tasks %}
-                    <tr>
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.completed_at.strftime('%Y-%m-%d %H:%M') if task.completed_at else 'N/A' }}</td>
-                    </tr>
+                <div class="timeline-item matrix-card">
+                    <div class="time-marker">
+                        <div class="marker-dot"></div>
+                        <div class="marker-line"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3 class="task-title">{{ task.title }}</h3>
+                            <span class="completion-time">
+                                Completed: {{ task.completed_at.strftime('%Y-%m-%d %H:%M') }}
+                            </span>
+                        </div>
+                        <div class="priority-stars mb-3">
+                            {% for i in range(task.priority|int) %}
+                            <i class='bx bxs-star'></i>
+                            {% endfor %}
+                            {% for i in range(5 - task.priority|int) %}
+                            <i class='bx bx-star'></i>
+                            {% endfor %}
+                        </div>
+                        <p class="task-description">{{ task.description }}</p>
+                        <div class="task-meta">
+                            <div class="time-info">
+                                <div class="created-at">
+                                    <i class='bx bx-calendar-plus'></i>
+                                    <span>Created: {{ task.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                                </div>
+                                <div class="due-date">
+                                    <i class='bx bx-calendar-check'></i>
+                                    <span>Due: {{ task.due_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                                </div>
+                            </div>
+                            <div class="completion-badge">
+                                <i class='bx bx-check-circle'></i>
+                                <span>Mission Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No completed tasks yet.</p>
-    {% endif %}
+            {% else %}
+                <div class="no-history matrix-card">
+                    <i class='bx bx-history'></i>
+                    <p>No completed tasks found in archive</p>
+                    <a href="{{ url_for('app_routes.dashboard') }}" class="cyber-btn">
+                        <i class='bx bx-arrow-back'></i>
+                        <span>Return to Command Center</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
